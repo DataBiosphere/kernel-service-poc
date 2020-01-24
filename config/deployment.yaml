@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: demo-service
+      labels:
+        version: v1
+    spec:
+      serviceAccountName: demo-service-sa
+      initContainers:
+      - name: init-certs
+        image: cockroachdb/cockroach-k8s-request-cert:0.4
+        imagePullPolicy: IfNotPresent
+        command:
+        - "/bin/ash"
+        - "-ecx"
+        - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=client -user=workspace-user -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        - name: client-certs
+          mountPath: /cockroach-certs
+      containers:
+      - name: demo-app
+        image: gcr.io/terra-kernel-k8s/workspace-test:0.0.0
+        imagePullPolicy: Always
+        env:
+        - name: ROOT_CERT_PATH
+          value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        - name: CLIENT_CERT_PATH
+          value: /cockroach-certs/client.workspace-user.crt
+        - name: KEY_CERT_PATH
+          value: /cockroach-certs/client.workspace-user.key
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: client-certs
+            mountPath: /cockroach-certs
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - name: client-certs
+          mountPath: /cockroach-certs
+        env:
+        - name: GREETING
+          value: "HELLO THERE"
+#      hostNetwork: true
+#      dnsPolicy: Default
+      volumes:
+        - name: client-certs
+          emptyDir: {}

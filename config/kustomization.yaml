@@ -1,0 +1,47 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: test-ephemeral-namespace
+commonLabels:
+  app: demo-service
+#configMapGenerator:
+#- name: kustomize-env-vars
+#  literals:
+#  - KUSTOMIZE_NAMESPACE=test-ephemeral-namespace
+#  - KUSTOMIZE_PSP_NAME=demo-service-psp
+#  - KUSTOMIZE_CLUSTERROLE_NAME=demo-service-clusterrole
+#  - KUSTOMIZE_SERVICE_ACCOUNT_NAME=demo-service-sa
+#
+##vars:
+##- name: KUSTOMIZE_NAMESPACE
+##  objref:
+##    kind: Namespace
+##    name: namespace
+##    apiVersion: v1
+##- name: KUSTOMIZE_PSP_NAME
+##  objref:
+##    kind: PodSecurityPolicy
+##    name: demo-service-psp
+##    apiVersion: policy/v1beta1
+##- name: KUSTOMIZE_CLUSTERROLE_NAME
+##  objref:
+##    kind: ClusterRole
+##    name: demo-service-clusterrole
+##    apiVersion: rbac.authorization.k8s.io/v1
+##- name: KUSTOMIZE_SERVICE_ACCOUNT_NAME
+##  objref:
+##    kind: ServiceAccount
+##    name: demo-service-sa
+##    apiVersion: v1
+resources:
+- namespace.yaml
+- psp.yaml
+- service-account.yaml
+- role.yaml
+- clusterrole.yaml
+- rolebinding.yaml
+- clusterrolebinding.yaml
+- deployment.yaml
+- service.yaml
+- istio-gateway.yaml
+- istio-virtualservice.yaml
+
