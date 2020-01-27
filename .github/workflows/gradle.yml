@@ -19,13 +19,13 @@ jobs:
         VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
       run: |
-      VAULT_TOKEN="($vault write auth/approle/login role_id=$VAULT_APPROLE_ROLE_ID secret_id=$VAULT_APPROLE_SECRET_ID)"
-      echo "::set-output gcr_sa_email=($vault read -field=testk secret/dsde/terra/kernel/test)"
-      echo "::set-output gcr_sa_key=($vault read -field=testk secret/dsde/terra/kernel/test)"
-      echo "::set-output k8s_api_url=($vault read -field=testk secret/dsde/terra/kernel/test)"
-      echo "::set-output k8s_sa_key=($vault read -field=testk secret/dsde/terra/kernel/test)"
-      echo "::set-output cdb_client_cert=($vault read -field=testk secret/dsde/terra/kernel/test)"
-      echo "::set-output cdb_key_cert=($vault read -field=testk secret/dsde/terra/kernel/test)"
+        VAULT_TOKEN="($vault write auth/approle/login role_id=$VAULT_APPROLE_ROLE_ID secret_id=$VAULT_APPROLE_SECRET_ID)"
+        echo "::set-output gcr_sa_email=($vault read -field=testk secret/dsde/terra/kernel/test)"
+        echo "::set-output gcr_sa_key=($vault read -field=testk secret/dsde/terra/kernel/test)"
+        echo "::set-output k8s_api_url=($vault read -field=testk secret/dsde/terra/kernel/test)"
+        echo "::set-output k8s_sa_key=($vault read -field=testk secret/dsde/terra/kernel/test)"
+        echo "::set-output cdb_client_cert=($vault read -field=testk secret/dsde/terra/kernel/test)"
+        echo "::set-output cdb_key_cert=($vault read -field=testk secret/dsde/terra/kernel/test)"
     - name: Auth to GCR
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
