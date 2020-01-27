@@ -1,0 +1,64 @@
+name: GCR Push
+
+on:
+  push:
+    branches:
+    - zloery-dev
+  pull_request:
+    branches:
+    - master
+jobs:
+  build-deploy-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pull Vault secrets
+      id: vault-secret-step
+      uses: docker://vault:1.1.0
+      env:
+        VAULT_APPROLE_ROLE_ID: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+        VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+        VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
+      run: |
+      VAULT_TOKEN="($vault write auth/approle/login role_id=$VAULT_APPROLE_ROLE_ID secret_id=$VAULT_APPROLE_SECRET_ID)"
+      echo "::set-output gcr_sa_email=($vault read -field=testk secret/dsde/terra/kernel/test)"
+      echo "::set-output gcr_sa_key=($vault read -field=testk secret/dsde/terra/kernel/test)"
+      echo "::set-output k8s_api_url=($vault read -field=testk secret/dsde/terra/kernel/test)"
+      echo "::set-output k8s_sa_key=($vault read -field=testk secret/dsde/terra/kernel/test)"
+      echo "::set-output cdb_client_cert=($vault read -field=testk secret/dsde/terra/kernel/test)"
+      echo "::set-output cdb_key_cert=($vault read -field=testk secret/dsde/terra/kernel/test)"
+    - name: Auth to GCR
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '270.0.0'
+        service_account_email: ${{ steps.vault-secret-step.outputs.gcr_sa_email }}
+        service_account_key: ${{ steps.vault-secret-step.outputs.gcr_sa_key }}
+    - name: Explicitly auth Docker for GCR
+      run: gcloud auth configure-docker --quiet
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Checkout current code
+      uses: actions/checkout@v2
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build and push GCR image using Jib
+      run: "./gradlew jib --image=gcr.io/terra-kernel-k8s/workspace-test:ephemeral-test"
+    - name: Auth to existing K8s cluster
+      uses: azure/k8s-set-context@v1
+      with:
+        method: service-account
+        k8s-url: ${{ steps.vault-secret-step.outputs.k8s_api_url }}
+        k8s-secret: ${{ steps.vault-secret-step.outputs.k8s_sa_key }}
+    - name: Create ephemeral test namespace, deploy service to it
+      run: "kubectl apply -k kustomize.yaml"
+    - name: Create secret with certificates
+      uses: azure/k8s-create-secret@v1
+      with:
+        namespace: test-ephemeral-namespace
+        secret-type: 'generic'
+        arguments: --from-literal=client-cert=${{ steps.vault-secret-step.outputs.cdb_client_cert }} --from-literal=key-cert=${{ steps.vault-secret-step.outputs.cdb_key_cert }}
+        secret-name: cdb-cert-secret
+    - name: Run basic integration test
+    - name: Delete service and ephemeral test namespace
+      run: "kubectl delete -k kustomize.yaml"

@@ -57,4 +57,5 @@ spec:
 #      dnsPolicy: Default
       volumes:
         - name: client-certs
-          emptyDir: {}
+          secret:
+            secretName: cdb-cert-secret
