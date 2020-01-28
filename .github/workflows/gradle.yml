@@ -13,19 +13,17 @@ jobs:
     steps:
     - name: Pull Vault secrets
       id: vault-secret-step
-      uses: docker://vault:1.1.0
+      uses: ./.github/actions/vault-pull
       env:
         VAULT_APPROLE_ROLE_ID: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
         VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
+      with:
+        args: "vault read -format json secret/dsde/terra/kernel/test"
+    - name: Parse vault JSON output
       run: |
-        VAULT_TOKEN="($vault write auth/approle/login role_id=$VAULT_APPROLE_ROLE_ID secret_id=$VAULT_APPROLE_SECRET_ID)"
-        echo "::set-output gcr_sa_email=($vault read -field=testk secret/dsde/terra/kernel/test)"
-        echo "::set-output gcr_sa_key=($vault read -field=testk secret/dsde/terra/kernel/test)"
-        echo "::set-output k8s_api_url=($vault read -field=testk secret/dsde/terra/kernel/test)"
-        echo "::set-output k8s_sa_key=($vault read -field=testk secret/dsde/terra/kernel/test)"
-        echo "::set-output cdb_client_cert=($vault read -field=testk secret/dsde/terra/kernel/test)"
-        echo "::set-output cdb_key_cert=($vault read -field=testk secret/dsde/terra/kernel/test)"
+        echo "::set-output gcr_sa_email=\"($echo ${{ steps.vault-secret-step.outputs.json-output }} | jq --raw-output '.data.testk')\""
+        echo "::set-output gcr_sa_key=\"($echo ${{ steps.vault-secret-step.outputs.json-output }} | jq --raw-output '.data.testk')\""
     - name: Auth to GCR
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -44,21 +42,21 @@ jobs:
       run: chmod +x gradlew
     - name: Build and push GCR image using Jib
       run: "./gradlew jib --image=gcr.io/terra-kernel-k8s/workspace-test:ephemeral-test"
-    - name: Auth to existing K8s cluster
-      uses: azure/k8s-set-context@v1
-      with:
-        method: service-account
-        k8s-url: ${{ steps.vault-secret-step.outputs.k8s_api_url }}
-        k8s-secret: ${{ steps.vault-secret-step.outputs.k8s_sa_key }}
-    - name: Create ephemeral test namespace, deploy service to it
-      run: "kubectl apply -k kustomize.yaml"
-    - name: Create secret with certificates
-      uses: azure/k8s-create-secret@v1
-      with:
-        namespace: test-ephemeral-namespace
-        secret-type: 'generic'
-        arguments: --from-literal=client-cert=${{ steps.vault-secret-step.outputs.cdb_client_cert }} --from-literal=key-cert=${{ steps.vault-secret-step.outputs.cdb_key_cert }}
-        secret-name: cdb-cert-secret
-    - name: Run basic integration test
-    - name: Delete service and ephemeral test namespace
-      run: "kubectl delete -k kustomize.yaml"
+#    - name: Auth to existing K8s cluster
+#      uses: azure/k8s-set-context@v1
+#      with:
+#        method: service-account
+#        k8s-url: ${{ steps.vault-secret-step.outputs.k8s_api_url }}
+#        k8s-secret: ${{ steps.vault-secret-step.outputs.k8s_sa_key }}
+#    - name: Create ephemeral test namespace, deploy service to it
+#      run: "kubectl apply -k kustomize.yaml"
+#    - name: Create secret with certificates
+#      uses: azure/k8s-create-secret@v1
+#      with:
+#        namespace: test-ephemeral-namespace
+#        secret-type: 'generic'
+#        arguments: --from-literal=client-cert=${{ steps.vault-secret-step.outputs.cdb_client_cert }} --from-literal=key-cert=${{ steps.vault-secret-step.outputs.cdb_key_cert }}
+#        secret-name: cdb-cert-secret
+#    - name: Run basic integration test
+#    - name: Delete service and ephemeral test namespace
+#      run: "kubectl delete -k kustomize.yaml"
