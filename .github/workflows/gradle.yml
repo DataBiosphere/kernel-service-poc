@@ -24,7 +24,7 @@ jobs:
       id: vault-secret-step
       uses: ./.github/actions/vault-pull
       env:
-        VAULT_TOKEN: ${{ steps.vault-token-step.outputs.vault-output }}
+        VAULT_TOKEN: "${{ steps.vault-token-step.outputs.vault-output }}"
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
       with:
         args: "vault read -format json secret/dsde/terra/kernel/test"
