@@ -31,7 +31,7 @@ jobs:
         -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" \
         -v "/home/runner/work/kernel-service-poc/kernel-service-poc":"/github/workspace" \
         vault:1.1.0 \
-        -c "VAULT_TKN=\\`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=*** secret_id=***\\`;echo \"::set-output name=vault-token::$VAULT_TKN\";echo \"::set-output name=debug-output::test-val\""
+        -c "VAULT_TKN=\`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=*** secret_id=***\`;echo \"::set-output name=vault-token::$VAULT_TKN\";echo \"::set-output name=debug-output::test-val\""
     - name: Pull Vault secrets
       id: vault-secret-step
       uses: 'docker://vault:1.1.0'
