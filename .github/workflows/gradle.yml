@@ -11,14 +11,27 @@ jobs:
     steps:
     - name: Checkout current code
       uses: actions/checkout@v2
+    - name: Pull Vault image
+      run: docker pull vault:1.1.0
+    # Currently, there's no way to add capabilities to Docker actions on Git, and Vault needs IPC_LOCK to run.
     - name: Get Vault token
       id: vault-token-step
-      uses: 'docker://vault:1.1.0'
-      env:
-        VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
-      with:
-        entrypoint: "/bin/sh"
-        args: "-c \"VAULT_TKN=`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}`;echo \"::set-output name=vault-token::$VAULT_TKN\";echo \"::set-output name=debug-output::test-val\"\""
+      run: |
+        docker run -rm --cap-add IPC_LOCK -e VAULT_ADDR -e INPUT_ENTRYPOINT \
+        -e INPUT_ARGS -e HOME -e GITHUB_REF -e GITHUB_SHA -e GITHUB_REPOSITORY \
+        -e GITHUB_RUN_ID -e GITHUB_RUN_NUMBER -e GITHUB_ACTOR \
+        -e GITHUB_WORKFLOW -e GITHUB_HEAD_REF -e GITHUB_BASE_REF \
+        -e GITHUB_EVENT_NAME -e GITHUB_WORKSPACE -e GITHUB_ACTION \
+        -e GITHUB_EVENT_PATH -e RUNNER_OS -e RUNNER_TOOL_CACHE -e RUNNER_TEMP \
+        -e RUNNER_WORKSPACE -e ACTIONS_RUNTIME_URL -e ACTIONS_RUNTIME_TOKEN -e \
+        -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
+        GITHUB_ACTIONS=true --entrypoint "/bin/sh" \
+        -v "/var/run/docker.sock":"/var/run/docker.sock" \
+        -v "/home/runner/work/_temp/_github_home":"/github/home" \
+        -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" \
+        -v "/home/runner/work/kernel-service-poc/kernel-service-poc":"/github/workspace" \
+        vault:1.1.0 \
+        -c "VAULT_TKN=`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=*** secret_id=***`;echo \"::set-output name=vault-token::$VAULT_TKN\";echo \"::set-output name=debug-output::test-val\""
     - name: Pull Vault secrets
       id: vault-secret-step
       uses: 'docker://vault:1.1.0'
