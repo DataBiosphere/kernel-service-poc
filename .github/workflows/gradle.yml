@@ -13,25 +13,32 @@ jobs:
     steps:
     - name: Checkout current code
       uses: actions/checkout@v2
+    - name: Get Vault token
+      id: vault-token-step
+      uses: ./.github/actions/vault-pull
+      env:
+        VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
+      with:
+        args: "vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}"
     - name: Pull Vault secrets
       id: vault-secret-step
       uses: ./.github/actions/vault-pull
       env:
-        VAULT_APPROLE_ROLE_ID: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
-        VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+        VAULT_TOKEN: ${{ steps.vault-token-step.outputs.vault-output }}
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
       with:
         args: "vault read -format json secret/dsde/terra/kernel/test"
     - name: Parse vault JSON output
+      id: vault-parse-step
       run: |
-        echo "::set-output gcr_sa_email=\"($echo ${{ steps.vault-secret-step.outputs.json-output }} | jq --raw-output '.data.testk')\""
-        echo "::set-output gcr_sa_key=\"($echo ${{ steps.vault-secret-step.outputs.json-output }} | jq --raw-output '.data.testk')\""
+        echo "::set-output gcr_sa_email=\"($echo ${{ steps.vault-secret-step.outputs.vault-output }} | jq --raw-output '.data.testk')\""
+        echo "::set-output gcr_sa_key=\"($echo ${{ steps.vault-secret-step.outputs.vault-output }} | jq --raw-output '.data.testk')\""
     - name: Auth to GCR
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         version: '270.0.0'
-        service_account_email: ${{ steps.vault-secret-step.outputs.gcr_sa_email }}
-        service_account_key: ${{ steps.vault-secret-step.outputs.gcr_sa_key }}
+        service_account_email: ${{ steps.vault-parse-step.outputs.gcr_sa_email }}
+        service_account_key: ${{ steps.vault-parse-step.outputs.gcr_sa_key }}
     - name: Explicitly auth Docker for GCR
       run: gcloud auth configure-docker --quiet
     - name: Set up JDK 1.8
