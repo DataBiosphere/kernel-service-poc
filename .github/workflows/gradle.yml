@@ -17,7 +17,7 @@ jobs:
     - name: Get Vault token
       id: vault-token-step
       run: |
-        docker run -rm --cap-add IPC_LOCK -e VAULT_ADDR -e INPUT_ENTRYPOINT \
+        docker run --rm --cap-add IPC_LOCK -e VAULT_ADDR -e INPUT_ENTRYPOINT \
         -e INPUT_ARGS -e HOME -e GITHUB_REF -e GITHUB_SHA -e GITHUB_REPOSITORY \
         -e GITHUB_RUN_ID -e GITHUB_RUN_NUMBER -e GITHUB_ACTOR \
         -e GITHUB_WORKFLOW -e GITHUB_HEAD_REF -e GITHUB_BASE_REF \
