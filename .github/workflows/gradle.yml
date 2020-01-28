@@ -27,7 +27,7 @@ jobs:
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
       with:
         entrypoint: "/bin/sh"
-        args: "-c 'VAULT_SECRETS=$(/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test);echo \"::set-output name=vault-secrets::$VAULT_SECRETS\"'"
+        args: "-c \"VAULT_SECRETS=`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test`;echo \"::set-output name=vault-secrets::$VAULT_SECRETS\"\""
     - name: Parse vault JSON output
       id: vault-parse-step
       run: |
