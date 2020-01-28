@@ -22,7 +22,7 @@ jobs:
       with:
         args: "vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}"
     - name: Check for credentials
-      run: "ls -a /github/home"
+      run: "ls -a /home/runner/work/_temp/_github_home"
     - name: Pull Vault secrets
       id: vault-secret-step
       uses: ./.github/actions/vault-pull
