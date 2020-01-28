@@ -20,7 +20,7 @@ jobs:
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
         HOME: "/github/home"
       with:
-        entrypoint: "docker-entrypoint.sh \"vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}\" > /github/home/.vault-token"
+        args: "vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }} > /github/home/.vault-token"
     - name: Pull Vault secrets
       id: vault-secret-step
       uses: ./.github/actions/vault-pull
