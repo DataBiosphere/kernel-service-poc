@@ -15,16 +15,15 @@ jobs:
       uses: actions/checkout@v2
     - name: Get Vault token
       id: vault-token-step
-      uses: ./.github/actions/vault-pull
+      uses: "docker://vault:1.1.0"
       env:
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
       with:
-        args: "vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}"
+        entrypoint: "/bin/sh /usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }} > ~/.vault-token"
     - name: Pull Vault secrets
       id: vault-secret-step
       uses: ./.github/actions/vault-pull
       env:
-        VAULT_TOKEN: "${{ steps.vault-token-step.outputs.vault-output }}"
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
       with:
         args: "vault read -format json secret/dsde/terra/kernel/test"
