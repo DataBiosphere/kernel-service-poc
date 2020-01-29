@@ -32,11 +32,6 @@ jobs:
         -v "/home/runner/work/kernel-service-poc/kernel-service-poc":"/github/workspace" \
         vault:1.1.0 \
         -c "VAULT_TKN=\`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}\`;echo \"::set-output name=vault-token::\$VAULT_TKN\";TEST_VAR=test-val;echo \"::set-output name=debug-output::\$TEST_VAR\""
-    # Note: these tokens are short lived, and the vault they give access to has no secrets
-    - name: (Debug) Print token
-      run: echo ${{ steps.vault-token-step.outputs.vault-token }}
-    - name: (Debug) Print simple output
-      run: echo ${{ steps.vault-token-step.outputs.debug-output }}
     - name: Pull Vault secrets
       id: vault-secret-step
       uses: 'docker://vault:1.1.0'
@@ -45,7 +40,7 @@ jobs:
         VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
       with:
         entrypoint: "/bin/sh"
-        args: "-c \"VAULT_SECRETS=`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test`;echo \"::set-output name=vault-secrets::$VAULT_SECRETS\"\""
+        args: "-c \"VAULT_SECRETS=`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test`;echo \"::set-output name=vault-secrets::\$VAULT_SECRETS\"\""
     - name: Parse vault JSON output
       id: vault-parse-step
       run: |
