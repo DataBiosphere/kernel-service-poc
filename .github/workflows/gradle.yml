@@ -17,7 +17,7 @@ jobs:
     - name: Get Vault token
       id: vault-token-step
       run: |
-        docker run --rm --cap-add IPC_LOCK
+        docker run --rm --cap-add IPC_LOCK \
         -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
         --entrypoint "/bin/sh" \
         vault:1.1.0 \
