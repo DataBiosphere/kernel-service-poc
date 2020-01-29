@@ -42,7 +42,8 @@ jobs:
         -e GITHUB_EVENT_NAME -e GITHUB_WORKSPACE -e GITHUB_ACTION \
         -e GITHUB_EVENT_PATH -e RUNNER_OS -e RUNNER_TOOL_CACHE -e RUNNER_TEMP \
         -e RUNNER_WORKSPACE -e ACTIONS_RUNTIME_URL -e ACTIONS_RUNTIME_TOKEN \
-        -e "VAULT_ADDR=${{ steps.vault-token-step.outputs.vault-token }}" \
+        -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
+        -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
         -e GITHUB_ACTIONS=true --entrypoint "/bin/sh" \
         -v "/var/run/docker.sock":"/var/run/docker.sock" \
         -v "/home/runner/work/_temp/_github_home":"/github/home" \
