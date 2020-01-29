@@ -34,9 +34,9 @@ jobs:
         -c "VAULT_TKN=\`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}\`;echo \"::set-output name=vault-token::$VAULT_TKN\";echo \"::set-output name=debug-output::test-val\""
     # Note: these tokens are short lived, and the vault they give access to has no secrets
     - name: (Debug) Print token
-      runs: echo ${{ steps.vault-token-step.outputs.vault-token }}
+      run: echo ${{ steps.vault-token-step.outputs.vault-token }}
     - name: (Debug) Print simple output
-      runs: echo ${{ steps.vault-token-step.outputs.debug-output }}
+      run: echo ${{ steps.vault-token-step.outputs.debug-output }}
     - name: Pull Vault secrets
       id: vault-secret-step
       uses: 'docker://vault:1.1.0'
