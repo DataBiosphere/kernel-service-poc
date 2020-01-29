@@ -64,7 +64,6 @@ jobs:
     - name: Parse vault JSON output
       id: vault-parse-step
       run: |
-        echo ${{ steps.vault-secret-step.outputs.vault-secret }}
         echo ::set-output name=gcr_sa_email::$(echo ${{ steps.vault-secret-step.outputs.vault-secrets }} | jq --raw-output '.data.testk')
         echo ::set-output name=gcr_sa_key::$(echo ${{ steps.vault-secret-step.outputs.vault-secrets }} | jq --raw-output '.data.testk')
     - name: Auth to GCR
