@@ -17,7 +17,7 @@ jobs:
     - name: Get Vault token
       id: vault-token-step
       run: |
-        docker run --rm --cap-add IPC_LOCK -e VAULT_ADDR -e INPUT_ENTRYPOINT \
+        docker run --rm --cap-add IPC_LOCK -e INPUT_ENTRYPOINT \
         -e INPUT_ARGS -e HOME -e GITHUB_REF -e GITHUB_SHA -e GITHUB_REPOSITORY \
         -e GITHUB_RUN_ID -e GITHUB_RUN_NUMBER -e GITHUB_ACTOR \
         -e GITHUB_WORKFLOW -e GITHUB_HEAD_REF -e GITHUB_BASE_REF \
@@ -32,15 +32,34 @@ jobs:
         -v "/home/runner/work/kernel-service-poc/kernel-service-poc":"/github/workspace" \
         vault:1.1.0 \
         -c "VAULT_TKN=\`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}\`;echo \"::set-output name=vault-token::\$VAULT_TKN\";TEST_VAR=test-val;echo \"::set-output name=debug-output::\$TEST_VAR\""
-    - name: Pull Vault secrets
+    - name: Get Vault secrets
       id: vault-secret-step
-      uses: 'docker://vault:1.1.0'
-      env:
-        VAULT_TOKEN: ${{ steps.vault-token-step.outputs.vault-token }}
-        VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
-      with:
-        entrypoint: "/bin/sh"
-        args: "-c \"VAULT_SECRETS=\\`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test\\`;echo \\\"::set-output name=vault-secrets::\\$VAULT_SECRETS\\\"\""
+      run: |
+        docker run --rm --cap-add IPC_LOCK -e INPUT_ENTRYPOINT \
+        -e INPUT_ARGS -e HOME -e GITHUB_REF -e GITHUB_SHA -e GITHUB_REPOSITORY \
+        -e GITHUB_RUN_ID -e GITHUB_RUN_NUMBER -e GITHUB_ACTOR \
+        -e GITHUB_WORKFLOW -e GITHUB_HEAD_REF -e GITHUB_BASE_REF \
+        -e GITHUB_EVENT_NAME -e GITHUB_WORKSPACE -e GITHUB_ACTION \
+        -e GITHUB_EVENT_PATH -e RUNNER_OS -e RUNNER_TOOL_CACHE -e RUNNER_TEMP \
+        -e RUNNER_WORKSPACE -e ACTIONS_RUNTIME_URL -e ACTIONS_RUNTIME_TOKEN \
+        -e "VAULT_ADDR=${{ steps.vault-token-step.outputs.vault-token }}" \
+        -e GITHUB_ACTIONS=true --entrypoint "/bin/sh" \
+        -v "/var/run/docker.sock":"/var/run/docker.sock" \
+        -v "/home/runner/work/_temp/_github_home":"/github/home" \
+        -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" \
+        -v "/home/runner/work/kernel-service-poc/kernel-service-poc":"/github/workspace" \
+        vault:1.1.0 \
+        -c "VAULT_SECRET=\`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test\`;echo \"::set-output name=vault-token::\VAULT_SECRET\""
+
+#    - name: Pull Vault secrets
+#      id: vault-secret-step
+#      uses: 'docker://vault:1.1.0'
+#      env:
+#        VAULT_TOKEN: ${{ steps.vault-token-step.outputs.vault-token }}
+#        VAULT_ADDR: "https://clotho.broadinstitute.org:8200"
+#      with:
+#        entrypoint: "/bin/sh"
+#        args: "-c \"VAULT_SECRETS=\\`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test\\`;echo \\\"::set-output name=vault-secrets::\\$VAULT_SECRETS\\\"\""
     - name: Parse vault JSON output
       id: vault-parse-step
       run: |
