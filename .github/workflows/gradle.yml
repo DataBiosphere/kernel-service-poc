@@ -30,22 +30,18 @@ jobs:
         -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
         --entrypoint "/bin/sh" \
         vault:1.1.0 \
-        -c "VAULT_SECRET=\`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test\`;echo ::set-output name=vault-secret::\$VAULT_SECRET;echo ::add-mask::\$VAULT_SECRET"
-    - name: Parse vault JSON output
-      id: vault-parse-step
-      run: |
-        GCR_EMAIL=$(jq --raw-output '.data.testk' <<< ${{ steps.vault-secret-step.outputs.vault-secret }}); \
-          echo ::add-mask::$GCR_EMAIL; \
-          echo ::set-output name=gcr_sa_email::$GCR_EMAIL
-        GCR_KEY=$(jq --raw-output '.data.testk' <<< ${{ steps.vault-secret-step.outputs.vault-secret }}); \
-          echo ::add-mask::$GCR_KEY; \
-          echo ::set-output name=gcr_sa_key::$GCR_KEY
+        -c "GCR_EMAIL=\`/usr/local/bin/docker-entrypoint.sh vault read -field testk secret/dsde/terra/kernel/test\`;\
+          echo ::set-output name=gcr-email::\$GCR_EMAIL;\
+          echo ::add-mask::\$GCR_EMAIL;\
+        GCR_KEY=\`/usr/local/bin/docker-entrypoint.sh vault read -field testk secret/dsde/terra/kernel/test\`;\
+          echo ::set-output name=gcr-key::\$GCR_KEY;\
+          echo ::add-mask::\$GCR_KEY"
     - name: Auth to GCR
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         version: '270.0.0'
-        service_account_email: ${{ steps.vault-parse-step.outputs.gcr_sa_email }}
-        service_account_key: ${{ steps.vault-parse-step.outputs.gcr_sa_key }}
+        service_account_email: ${{ steps.vault-secret-step.outputs.gcr-email }}
+        service_account_key: ${{ steps.vault-secret-step.outputs.gcr-key }}
     - name: Explicitly auth Docker for GCR
       run: gcloud auth configure-docker --quiet
     - name: Set up JDK 1.8
