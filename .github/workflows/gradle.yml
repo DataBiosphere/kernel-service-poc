@@ -33,7 +33,7 @@ jobs:
         vault:1.1.0 \
         -c "VAULT_TKN=\`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}\`;echo \"::set-output name=vault-token::\$VAULT_TKN\";TEST_VAR=test-val;echo \"::set-output name=debug-output::\$TEST_VAR\""
     - name: Mask vault token
-      runs: echo ::add-mask::${{ steps.vault-token-step.outputs.vault-token }}
+      run: echo ::add-mask::${{ steps.vault-token-step.outputs.vault-token }}
     - name: Get Vault secrets
       id: vault-secret-step
       run: |
