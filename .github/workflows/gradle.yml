@@ -50,7 +50,7 @@ jobs:
         -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" \
         -v "/home/runner/work/kernel-service-poc/kernel-service-poc":"/github/workspace" \
         vault:1.1.0 \
-        -c "VAULT_SECRET=\`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test\`;echo \"::set-output name=vault-token::\$VAULT_SECRET\""
+        -c "VAULT_SECRET=\`/usr/local/bin/docker-entrypoint.sh vault read -format json secret/dsde/terra/kernel/test\`;echo \"::set-output name=vault-secret::\$VAULT_SECRET\""
 
 #    - name: Pull Vault secrets
 #      id: vault-secret-step
