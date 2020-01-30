@@ -71,7 +71,7 @@ jobs:
         method: service-account
         k8s-url: ${{ steps.vault-secret-step.outputs.k8s-url }}
         k8s-secret: |
-        "${{ steps.vault-secret-step.outputs.k8s-key }}"
+          ${{ steps.vault-secret-step.outputs.k8s-key }}
     - name: Update dev deployment to use latest image
       run: |
         cd config
