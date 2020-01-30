@@ -18,24 +18,26 @@ jobs:
       id: vault-token-step
       run: |
         docker run --rm --cap-add IPC_LOCK \
-        -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
-        --entrypoint "/bin/sh" \
-        vault:1.1.0 \
-        -c "VAULT_TKN=\`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}\`;echo ::set-output name=vault-token::\$VAULT_TKN;echo ::add-mask::\$VAULT_TKN"
+          -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
+          --entrypoint "/bin/sh" \
+          vault:1.1.0 \
+          -c "VAULT_TKN=\`/usr/local/bin/docker-entrypoint.sh vault write -field token auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }}\`;\
+            echo ::set-output name=vault-token::\$VAULT_TKN;\
+            echo ::add-mask::\$VAULT_TKN"
     - name: Get Vault secrets
       id: vault-secret-step
       run: |
         docker run --rm --cap-add IPC_LOCK \
-        -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
-        -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
-        --entrypoint "/bin/sh" \
-        vault:1.1.0 \
-        -c "GCR_EMAIL=\`/usr/local/bin/docker-entrypoint.sh vault read -field testk secret/dsde/terra/kernel/test\`;\
-          echo ::set-output name=gcr-email::\$GCR_EMAIL;\
-          echo ::add-mask::\$GCR_EMAIL;\
-        GCR_KEY=\`/usr/local/bin/docker-entrypoint.sh vault read -field testk secret/dsde/terra/kernel/test\`;\
-          echo ::set-output name=gcr-key::\$GCR_KEY;\
-          echo ::add-mask::\$GCR_KEY"
+          -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
+          -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
+          --entrypoint "/bin/sh" \
+          vault:1.1.0 \
+          -c "GCR_EMAIL=\`/usr/local/bin/docker-entrypoint.sh vault read -field ci-gcr-sa-email secret/dsde/terra/kernel/test\`;\
+            echo ::set-output name=gcr-email::\$GCR_EMAIL;\
+            echo ::add-mask::\$GCR_EMAIL;\
+          GCR_KEY=\`/usr/local/bin/docker-entrypoint.sh vault read -field ci-gcr-sa-key secret/dsde/terra/kernel/test\`;\
+            echo ::set-output name=gcr-key::\$GCR_KEY;\
+            echo ::add-mask::\$GCR_KEY"
     - name: Auth to GCR
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -51,7 +53,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build and push GCR image using Jib
-      run: "./gradlew jib --image=gcr.io/terra-kernel-k8s/workspace-test:ephemeral-test"
+      run: "./gradlew jib --image=gcr.io/terra-kernel-k8s/workspace-test:${{ github.sha }}"
 #    - name: Auth to existing K8s cluster
 #      uses: azure/k8s-set-context@v1
 #      with:
