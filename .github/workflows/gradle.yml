@@ -37,10 +37,10 @@ jobs:
             echo ::add-mask::\$GCR_EMAIL;\
           GCR_KEY=\`/usr/local/bin/docker-entrypoint.sh vault read -field ci-gcr-sa-key secret/dsde/terra/kernel/test\`;\
             echo ::set-output name=gcr-key::\$GCR_KEY;\
-            echo ::add-mask::\$GCR_KEY"; \
+            echo ::add-mask::\$GCR_KEY";\
           K8S_URL=\`/usr/local/bin/docker-entrypoint.sh vault read -field k8s-api-ip secret/dsde/terra/kernel/test\`;\
             echo ::set-output name=k8s-url::\$K8S_URL;\
-            echo ::add-mask::\$K8S_URL"; \
+            echo ::add-mask::\$K8S_URL";\
           K8S_KEY=\`/usr/local/bin/docker-entrypoint.sh vault read -field k8s-sa-key secret/dsde/terra/kernel/test\`;\
             echo ::set-output name=k8s-key::\$K8S_KEY;\
             echo ::add-mask::\$K8S_KEY"
