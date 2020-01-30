@@ -63,7 +63,7 @@ jobs:
     - name: Install Kubectl
       uses: azure/setup-kubectl@v1
       with:
-        version: '1.14.0'
+        version: 'v1.15.0'
       id: install-kubectl
     - name: Auth to existing K8s cluster
       uses: azure/k8s-set-context@v1
