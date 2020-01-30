@@ -1,0 +1,8 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: demo-service-clusterrole
+rules:
+- apiGroups: ['certificates.k8s.io']
+  resources: ['certificatesigningrequests']
+  verbs: ['create', 'get', 'watch']
