@@ -20,33 +20,44 @@ jobs:
         VAULT_TOKEN=$(docker run --rm --cap-add IPC_LOCK \
           -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
           vault:1.1.0 \
-          /usr/local/bin/docker-entrypoint.sh vault write -field token \
+          vault write -field token \
             auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} \
             secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }})
         echo ::set-output name=vault-token::$VAULT_TOKEN
-        echo ::add-mask::$VAULT_TKN
+        echo ::add-mask::$VAULT_TOKEN
     - name: Get Vault secrets
       id: vault-secret-step
       # The string substitution for K8s key is because git actions cannot handle multiline string outputs.
       run: |
-        docker run --rm --cap-add IPC_LOCK \
+        GCR_EMAIL=$(docker run --rm --cap-add IPC_LOCK \
           -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
           -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
-          --entrypoint "/bin/sh" \
           vault:1.1.0 \
-          -c "GCR_EMAIL=\`/usr/local/bin/docker-entrypoint.sh vault read -field ci-gcr-sa-email secret/dsde/terra/kernel/test\`;\
-            echo ::set-output name=gcr-email::\$GCR_EMAIL;\
-            echo ::add-mask::\$GCR_EMAIL;\
-          GCR_KEY=\`/usr/local/bin/docker-entrypoint.sh vault read -field ci-gcr-sa-key secret/dsde/terra/kernel/test\`;\
-            echo ::set-output name=gcr-key::\$GCR_KEY;\
-            echo ::add-mask::\$GCR_KEY;\
-          K8S_URL=\`/usr/local/bin/docker-entrypoint.sh vault read -field k8s-api-ip secret/dsde/terra/kernel/test\`;\
-            echo ::set-output name=k8s-url::\$K8S_URL;\
-            echo ::add-mask::\$K8S_URL;\
-          K8S_KEY=\`/usr/local/bin/docker-entrypoint.sh vault read -field k8s-sa-key secret/dsde/terra/kernel/test\`;\
-            K8S_KEY=\${K8S_KEY//\$'\n'/'%0A'};\
-            echo ::set-output name=k8s-key::\$K8S_KEY;\
-            echo ::add-mask::\$K8S_KEY"
+          vault read -field ci-gcr-sa-email secret/dsde/terra/kernel/test)
+        GCR_KEY=$(docker run --rm --cap-add IPC_LOCK \
+          -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
+          -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
+          vault:1.1.0 \
+          vault read -field ci-gcr-sa-key secret/dsde/terra/kernel/test)
+        K8S_URL=$(docker run --rm --cap-add IPC_LOCK \
+          -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
+          -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
+          vault:1.1.0 \
+          vault read -field k8s-api-ip secret/dsde/terra/kernel/test)
+        K8S_KEY=$(docker run --rm --cap-add IPC_LOCK \
+          -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
+          -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
+          vault:1.1.0 \
+          vault read -field k8s-sa-key secret/dsde/terra/kernel/test)
+        echo ::set-output name=gcr-email::$GCR_EMAIL
+        echo ::add-mask::$GCR_EMAIL
+        echo ::set-output name=gcr-key::$GCR_KEY
+        echo ::add-mask::$GCR_KEY
+        echo ::set-output name=k8s-url::$K8S_URL
+        echo ::add-mask::$K8S_URL
+        K8S_KEY=${K8S_KEY//$'\n'/'%0A'}
+        echo ::set-output name=k8s-key::$K8S_KEY
+        echo ::add-mask::$K8S_KEY
 #    - name: Auth to GCR
 #      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
 #      with:
