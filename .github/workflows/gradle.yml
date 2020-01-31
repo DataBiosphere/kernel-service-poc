@@ -26,6 +26,7 @@ jobs:
             echo ::add-mask::\$VAULT_TKN"
     - name: Get Vault secrets
       id: vault-secret-step
+      # The string substitution for K8s key is because git actions cannot handle multiline string outputs.
       run: |
         docker run --rm --cap-add IPC_LOCK \
           -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
