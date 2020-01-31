@@ -65,6 +65,13 @@ jobs:
       with:
         version: 'v1.15.0'
       id: install-kubectl
+    - name: Install kustomize
+      env:
+        KUSTOMIZE_VERSION: 2.1.0
+      command: |
+        curl -L -o /usr/local/bin/kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64
+        chmod +x /usr/local/bin/kustomize
+        kustomize version
     - name: Auth to existing K8s cluster
       uses: azure/k8s-set-context@v1
       with:
