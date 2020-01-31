@@ -82,6 +82,6 @@ jobs:
     - name: Update dev deployment to use latest image
       run: |
         cd config
-        kustomize edit set imagetag gcr.io/terra-kernel-k8s/workspace-test:${{ github.sha }}
+        ./kustomize edit set imagetag gcr.io/terra-kernel-k8s/workspace-test:${{ github.sha }}
     - name: Deploy service directly to Dev namepsace
       run: "kubectl kustomize . | kubectl apply -f -"
