@@ -60,11 +60,11 @@ jobs:
 #      run: chmod +x gradlew
 #    - name: Build and push GCR image using Jib
 #      run: "./gradlew jib --image=gcr.io/terra-kernel-k8s/workspace-test:${{ github.sha }}"
-#    - name: Install Kubectl
-#      uses: azure/setup-kubectl@v1
-#      with:
-#        version: 'v1.15.0'
-#      id: install-kubectl
+    - name: Install Kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'v1.15.0'
+      id: install-kubectl
     - name: Auth to existing K8s cluster
       uses: azure/k8s-set-context@v1
       with:
