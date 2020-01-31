@@ -71,7 +71,7 @@ jobs:
       run: |
         curl -L -o ./config/kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64
         chmod +x ./config/kustomize
-        kustomize version
+        ./config/kustomize version
     - name: Auth to existing K8s cluster
       uses: azure/k8s-set-context@v1
       with:
