@@ -23,8 +23,8 @@ jobs:
           /usr/local/bin/docker-entrypoint.sh vault write -field token \
             auth/approle/login role_id=${{ secrets.VAULT_APPROLE_ROLE_ID }} \
             secret_id=${{ secrets.VAULT_APPROLE_SECRET_ID }})
-        echo ::set-output name=vault-token::\$VAULT_TKN
-        echo ::add-mask::\$VAULT_TKN
+        echo ::set-output name=vault-token::$VAULT_TOKEN
+        echo ::add-mask::$VAULT_TKN
     - name: Get Vault secrets
       id: vault-secret-step
       # The string substitution for K8s key is because git actions cannot handle multiline string outputs.
