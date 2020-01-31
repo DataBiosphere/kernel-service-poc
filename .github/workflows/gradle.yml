@@ -43,7 +43,7 @@ jobs:
             echo ::add-mask::\$K8S_URL;\
           K8S_KEY=\`/usr/local/bin/docker-entrypoint.sh vault read -field k8s-sa-key secret/dsde/terra/kernel/test\`;\
             K8S_KEY=\"\${K8S_KEY//\$'\n'/'%0A'}\";\
-            echo ::set-output name=k8s-key::\"\$K8S_KEY\""
+            echo ::set-output name=k8s-key::\$K8S_KEY"
     - name: Auth to GCR
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
