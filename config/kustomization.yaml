@@ -5,3 +5,4 @@ commonLabels:
   app: demo-service
 resources:
 - deployment.yaml
+- service.yaml
