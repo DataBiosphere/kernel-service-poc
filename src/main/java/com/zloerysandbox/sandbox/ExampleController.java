@@ -58,7 +58,7 @@ public class ExampleController {
   }
   @GetMapping("/demo")
   public @ResponseBody List<Map<String, Object>> getDemo() {
-    List<Map<String, Object>> resultSet =  this.template.queryForList("SELECT * FROM workspaces");
+    List<Map<String, Object>> resultSet =  this.template.queryForList("SELECT * FROM refs");
     return resultSet;
   }
 }

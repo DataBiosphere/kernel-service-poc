@@ -1,0 +1,8 @@
+name: vault-pull
+description: Action wrapper to allow steps using Vault image to write output
+outputs:
+  vault-output:
+    description: 'Output of vault CLI call.'
+runs:
+  using: 'docker'
+  image: 'docker://vault:1.1.0'
