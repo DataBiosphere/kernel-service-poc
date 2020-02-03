@@ -1,0 +1,12 @@
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "demo-deployment-service"
+spec:
+  ports:
+  - protocol: "TCP"
+    port: 80
+  selector:
+    app: "demo-service"
+  type: "LoadBalancer"
+  loadBalancerIP: ""
