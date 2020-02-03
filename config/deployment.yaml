@@ -13,26 +13,11 @@ spec:
         version: v1
     spec:
       serviceAccountName: demo-service-sa
-      initContainers:
-      - name: init-certs
-        image: cockroachdb/cockroach-k8s-request-cert:0.4
-        imagePullPolicy: IfNotPresent
-        command:
-        - "/bin/ash"
-        - "-ecx"
-        - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=client -user=workspace-user -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
-        env:
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        volumeMounts:
-        - name: client-certs
-          mountPath: /cockroach-certs
       containers:
       - name: demo-app
         image: gcr.io/terra-kernel-k8s/workspace-test:0.0.0
         imagePullPolicy: Always
+        # These vars are read by the demo service
         env:
         - name: ROOT_CERT_PATH
           value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -45,6 +30,8 @@ spec:
         volumeMounts:
           - name: client-certs
             mountPath: /cockroach-certs
+            readOnly: true
       volumes:
         - name: client-certs
-          emptyDir: {}
+          secret:
+            secretName: cockroach-certs
