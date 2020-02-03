@@ -27,7 +27,6 @@ jobs:
         echo ::add-mask::$VAULT_TOKEN
     - name: Get Vault secrets
       id: vault-secret-step
-      # The string substitution for K8s key is because git actions cannot handle multiline string outputs.
       run: |
         GCR_EMAIL=$(docker run --rm --cap-add IPC_LOCK \
           -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
@@ -39,25 +38,10 @@ jobs:
           -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
           vault:1.1.0 \
           vault read -field ci-gcr-sa-key secret/dsde/terra/kernel/test)
-        K8S_URL=$(docker run --rm --cap-add IPC_LOCK \
-          -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
-          -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
-          vault:1.1.0 \
-          vault read -field k8s-api-ip secret/dsde/terra/kernel/test)
-        K8S_KEY=$(docker run --rm --cap-add IPC_LOCK \
-          -e "VAULT_TOKEN=${{ steps.vault-token-step.outputs.vault-token }}" \
-          -e "VAULT_ADDR=https://clotho.broadinstitute.org:8200" \
-          vault:1.1.0 \
-          vault read -field k8s-sa-key secret/dsde/terra/kernel/test)
         echo ::set-output name=gcr-email::$GCR_EMAIL
         echo ::add-mask::$GCR_EMAIL
         echo ::set-output name=gcr-key::$GCR_KEY
         echo ::add-mask::$GCR_KEY
-        echo ::set-output name=k8s-url::$K8S_URL
-        echo ::add-mask::$K8S_URL
-        K8S_KEY=${K8S_KEY//$'\n'/'%0A'}
-        echo ::set-output name=k8s-key::$K8S_KEY
-        echo ::add-mask::$K8S_KEY
     - name: Auth to GCR
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -90,4 +74,3 @@ jobs:
         gcloud container clusters get-credentials terra-kernel-k8s \
                   --zone us-central1-a --project terra-kernel-k8s
         kubectl kustomize ./config | kubectl apply -f -
-    # Comment for git workflow run
