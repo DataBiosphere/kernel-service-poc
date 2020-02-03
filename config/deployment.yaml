@@ -45,16 +45,6 @@ spec:
         volumeMounts:
           - name: client-certs
             mountPath: /cockroach-certs
-      - name: nginx
-        image: nginx
-        volumeMounts:
-        - name: client-certs
-          mountPath: /cockroach-certs
-        env:
-        - name: GREETING
-          value: "HELLO THERE"
-#      hostNetwork: true
-#      dnsPolicy: Default
       volumes:
         - name: client-certs
           emptyDir: {}
