@@ -90,3 +90,4 @@ jobs:
         gcloud container clusters get-credentials terra-kernel-k8s \
                   --zone us-central1-a --project terra-kernel-k8s
         kubectl kustomize ./config | kubectl apply -f -
+    # Comment for git workflow run
