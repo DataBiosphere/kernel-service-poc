@@ -4,9 +4,7 @@ metadata:
   name: "demo-deployment-service"
 spec:
   ports:
-  - protocol: "TCP"
-    port: 80
+  - name: "http"
+    port: 8080
   selector:
     app: "demo-service"
-  type: "LoadBalancer"
-  loadBalancerIP: ""
