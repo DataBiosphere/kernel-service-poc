@@ -50,5 +50,5 @@ spec:
           readOnly: true
       volumes:
         - name: cloudsql-sa-creds
-            secret:
-              secretName: cloudsql-sa-creds
+          secret:
+            secretName: cloudsql-sa-creds
