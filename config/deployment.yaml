@@ -36,7 +36,7 @@ spec:
         - name: SQL_INSTANCE_NAME
           valueFrom:
             secretKeyRef:
-              name: cloudqsl-instance-name
+              name: cloudsql-instance-name
               key: name
         command: ["/cloud_sql_proxy",
                   "-instances=terra-kernel-k8s:us-central1:$(SQL_INSTANCE_NAME)=tcp:5432",
