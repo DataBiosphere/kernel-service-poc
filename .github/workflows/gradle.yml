@@ -76,6 +76,6 @@ jobs:
         ./kustomize edit set image gcr.io/${GOOGLE_PROJECT}/${SERVICE_NAME}:0.0.0=gcr.io/${GOOGLE_PROJECT}/${SERVICE_NAME}:${{ github.sha }}
     - name: Deploy service directly to Dev namepsace
       run: |
-        gcloud container clusters get-credentials ${GOOGLE_PROJECT} \
-                  --zone us-central1-a --project ${GKE_CLUSTER}
+        gcloud container clusters get-credentials ${GKE_CLUSTER} \
+                  --zone us-central1-a --project ${GOOGLE_PROJECT}
         kubectl kustomize ./config | kubectl apply -f -
