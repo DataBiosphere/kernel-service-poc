@@ -26,10 +26,10 @@ spec:
               name: cloudsql-user-creds
               key: username
         - name: DATABASE_USER_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: cloudsql-user-creds
-                key: password
+          valueFrom:
+            secretKeyRef:
+              name: cloudsql-user-creds
+              key: password
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.16
         env:
