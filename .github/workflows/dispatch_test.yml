@@ -28,5 +28,5 @@ jobs:
       with:
         token: ${{ secrets.REPO_ACCESS_TOKEN }}
         repository: databiosphere/framework-version
-        event-type: my-event
+        event-type: version-bump
         client-payload: '{"service": "${{ env.SERVICE_NAME }}", "tag": "${{ steps.tag.outputs.tag }}"}'
