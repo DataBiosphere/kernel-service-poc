@@ -24,9 +24,9 @@ jobs:
         RELEASE_BRANCHES: gm-dispatch
         WITH_V: false
     - name: Repository Dispatch
-        uses: broadinstitute/repository-dispatch@master
-        with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          repository: databiosphere/framework-version
-          event-type: my-event
-          client-payload: '{"service": "${{ env.SERVICE_NAME }}", "tag": "${{ steps.tag.outputs.tag }}"}'
+      uses: broadinstitute/repository-dispatch@master
+      with:
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        repository: databiosphere/framework-version
+        event-type: my-event
+        client-payload: '{"service": "${{ env.SERVICE_NAME }}", "tag": "${{ steps.tag.outputs.tag }}"}'
