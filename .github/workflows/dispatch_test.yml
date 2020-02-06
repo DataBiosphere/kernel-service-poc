@@ -19,11 +19,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RELEASE_BRANCHES: gm-dispatch
         WITH_V: false
-    - name: Repository Dispatch
+    - name: Update Framework Version Mapping
       uses: broadinstitute/repository-dispatch@master
       with:
         token: ${{ secrets.REPO_ACCESS_TOKEN }}
         repository: databiosphere/framework-version
         event-type: version-bump
-        client-payload: '{"service": "${{ env.SERVICE_NAME }}", "tag": "${{ steps.tag.outputs.tag }}"}'
-
+        client-payload: '{"service": "${{ env.SERVICE_NAME }}", "version": "${{ steps.tag.outputs.tag }}"}'
