@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - zloery-dev
-    - master
 jobs:
   build-deploy-test:
     runs-on: ubuntu-latest
