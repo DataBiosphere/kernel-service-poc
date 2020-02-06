@@ -30,4 +30,3 @@ jobs:
         repository: databiosphere/framework-version
         event-type: version-bump
         client-payload: '{"service": "${{ env.SERVICE_NAME }}", "tag": "${{ steps.tag.outputs.tag }}"}'
-
