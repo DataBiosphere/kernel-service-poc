@@ -5,11 +5,7 @@ on:
     branches:
     - gm-dispatch
 env:
-  SERVICE_NAME: workspace-test
-  GOOGLE_PROJECT: terra-kernel-k8s
-  GKE_CLUSTER: terra-kernel-k8s
-  VAULT_PATH_GCR: secret/dsde/terra/kernel/test
-  VAULT_ADDR: https://clotho.broadinstitute.org:8200
+  SERVICE_NAME: ${{ github.event.repository.name }}
 jobs:
   tag-dispatch:
     runs-on: ubuntu-latest
