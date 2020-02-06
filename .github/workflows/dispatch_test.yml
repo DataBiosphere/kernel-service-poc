@@ -1,4 +1,4 @@
-name: Tag, Build, and Push Image
+name: Dispatch Test
 
 on:
   push:
@@ -11,7 +11,7 @@ env:
   VAULT_PATH_GCR: secret/dsde/terra/kernel/test
   VAULT_ADDR: https://clotho.broadinstitute.org:8200
 jobs:
-  tag-build-push:
+  tag-dispatch:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout current code
