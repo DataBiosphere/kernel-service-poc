@@ -78,4 +78,6 @@ jobs:
       run: |
         gcloud container clusters get-credentials ${GKE_CLUSTER} \
                   --zone us-central1-a --project ${GOOGLE_PROJECT}
-        kubectl kustomize ./config | kubectl apply -f -
+        curl -L -o ./kustomization.yaml https://raw.githubusercontent.com/DataBiosphere/kernel-service-poc-config/master/dev/kustomization.yaml
+        ./config/kustomize edit set base ./config
+        kubectl kustomize . | kubectl apply -f -
