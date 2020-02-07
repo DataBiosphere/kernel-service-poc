@@ -27,3 +27,4 @@ jobs:
         event-type: version-bump
         client-payload: '{"service": "${{ env.SERVICE_NAME }}", "version": "${{ steps.tag.outputs.tag }}"}'
 
+
