@@ -80,4 +80,4 @@ jobs:
                   --zone us-central1-a --project ${GOOGLE_PROJECT}
         curl -L -o ./kustomization.yaml https://raw.githubusercontent.com/DataBiosphere/kernel-service-poc-config/master/dev/kustomization.yaml
         ./config/kustomize edit add base ./config/kustomization.yaml
-        kubectl kustomize . | kubectl apply -f -
+        kustomize build . | kubectl apply -f -

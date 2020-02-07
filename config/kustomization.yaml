@@ -3,7 +3,6 @@ kind: Kustomization
 commonLabels:
   app: template-service
 resources:
-- namespace.yaml
 - service-account.yaml
 - psp.yaml
 - role.yaml
