@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-deployment
+  name: template-deployment
   labels:
     version: v1
 spec:
   replicas: 1
   template:
     metadata:
-      name: demo-service
+      name: template-service
       labels:
         version: v1
     spec:
-      serviceAccountName: demo-service-sa
+      serviceAccountName: template-service-sa
       containers:
-      - name: demo-app
+      - name: template-app
         image: gcr.io/terra-kernel-k8s/workspace-test:0.0.0
         imagePullPolicy: Always
         ports:
