@@ -56,8 +56,8 @@ openApiGenerate {
 	inputSpec = "${openapiSourceFile}".toString()
 	outputDir = "${openapiTargetDir}".toString()
 	packageName = "${group}"
-	apiPackage = "${group}.controller"
-	modelPackage = "${group}.model"
+	apiPackage = "${group}.generated.controller"
+	modelPackage = "${group}.generated.model"
 	configOptions = [
 	        interfaceOnly : "true",
 			useTags : "true",
