@@ -40,6 +40,12 @@ We use the Spring idiom of the `postSetupInitialization`, found in ApplicationCo
 to perform initialization of the application between the point of having the entire application initialized and
 the point of opening the port to start accepting REST requests.
 
+### Annotating Singletons
+The typical pattern when using Spring is to make singleton classes for each service, controller, and DAO.
+You do not have to write the class with its own singleton support. Instead, annotate the class with
+the appropriate Spring annotation. Here are ones we use:
+
+
 ## Code Structure
 
 Explain

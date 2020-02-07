@@ -33,3 +33,6 @@ out/
 
 ### Emacs backup files
 *.*~
+
+### Mac directory metadata
+.DS_Store
