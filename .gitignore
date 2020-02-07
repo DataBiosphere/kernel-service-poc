@@ -36,3 +36,8 @@ out/
 
 ### Mac directory metadata
 .DS_Store
+
+### OpenAPI CodeGen detritus
+.openapi-generator/
+pom.xml
+
