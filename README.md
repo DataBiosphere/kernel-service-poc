@@ -54,6 +54,36 @@ the appropriate Spring annotation. Here are ones we use:
 ### Common Annotations
 There are other annotations that are handy to know about.
 
+#### Autowiring
+Spring wires up the singletons and other beans when the application is launched.
+That allows us to use Spring profiles to control the collection of code that is
+run for different environments. Perhaps obviously, you can only autowire singletons to each other. You cannot autowire
+dynamically created objects.
+
+There are two styles for declaring autowiring.
+The preferred method of autowiring, is to put the annotation on the constructor
+of the class. Spring will autowire all of the inputs to the constructor.
+```
+@Component
+public class Foo {
+    private Bar bar;
+    private Fribble fribble;
+
+    @Autowired
+    public Foo(Bar bar, Fribble fribble) {
+        this.bar = bar;
+        this.foo = foo;
+    }
+```
+Spring will pass in the instances of Bar and Fribble into the constructor.
+It is possible to autowire a specific class member, but that is rarely necessary:
+```
+@Component
+public class Foo {
+    @Autowired
+    private Bar bar;
+```
+
 #### REST Annotations
 <ul>
 <li><code>@RequestBody</code> Marks the controller input parameter receiving the body of the request</li>
