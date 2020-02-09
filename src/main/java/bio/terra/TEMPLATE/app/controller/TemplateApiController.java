@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TemplateApiController implements TemplateApi {
     @Override
     public ResponseEntity<String> ping(@RequestParam(value = "message", required = false) String message) {
+
+
         if (StringUtils.isEmpty(message)) {
             return new ResponseEntity<>("pong", HttpStatus.BAD_REQUEST);
         }
