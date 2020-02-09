@@ -35,6 +35,13 @@ public class ApplicationConfiguration {
     private String dbUsername;
     private String dbPassword;
     private String dbUri;
+    // These properties control code in the StartupInitializer. We would not use these in production, but they
+    // are handy to set for development and testing. There are only three interesting states:
+    // 1. initialize is true; upgrade is irrelevant - initialize and recreate an empty database
+    // 2. initialize is false; upgrade is true - apply changesets to an existing database
+    // 3. initialize is false; upgrade is false - do nothing to the database
+    private boolean dbInitializeOnStart;
+    private boolean dbUpgradeOnStart;
 
     // Not a property
     private PoolingDataSource<PoolableConnection> dataSource;
@@ -61,6 +68,22 @@ public class ApplicationConfiguration {
 
     public void setDbUri(String dbUri) {
         this.dbUri = dbUri;
+    }
+
+    public boolean isDbInitializeOnStart() {
+        return dbInitializeOnStart;
+    }
+
+    public void setDbInitializeOnStart(boolean dbInitializeOnStart) {
+        this.dbInitializeOnStart = dbInitializeOnStart;
+    }
+
+    public boolean isDbUpgradeOnStart() {
+        return dbUpgradeOnStart;
+    }
+
+    public void setDbUpgradeOnStart(boolean dbUpgradeOnStart) {
+        this.dbUpgradeOnStart = dbUpgradeOnStart;
     }
 
     public PoolingDataSource<PoolableConnection> getDataSource() {
