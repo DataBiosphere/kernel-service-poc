@@ -65,7 +65,7 @@ jobs:
       run: "./gradlew jib --image=gcr.io/${GOOGLE_PROJECT}/${SERVICE_NAME}:${{ github.sha }}"
     - name: Install kustomize
       env:
-        KUSTOMIZE_VERSION: 2.1.0
+        KUSTOMIZE_VERSION: 3.2.0
       run: |
         curl -L -o ./config/kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64
         chmod +x ./config/kustomize
@@ -78,4 +78,6 @@ jobs:
       run: |
         gcloud container clusters get-credentials ${GKE_CLUSTER} \
                   --zone us-central1-a --project ${GOOGLE_PROJECT}
-        kubectl kustomize ./config | kubectl apply -f -
+        curl -L -o ./kustomization.yaml https://raw.githubusercontent.com/DataBiosphere/kernel-service-poc-config/master/dev/kustomization.yaml
+        ./config/kustomize edit add base ./config
+        ./config/kustomize build . | kubectl apply -f -

@@ -1,37 +1,54 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-deployment
+  name: template-deployment
   labels:
     version: v1
 spec:
   replicas: 1
   template:
     metadata:
-      name: demo-service
+      name: template-service
       labels:
         version: v1
     spec:
-      serviceAccountName: demo-service-sa
+      serviceAccountName: template-service-sa
       containers:
-      - name: demo-app
+      - name: template-app
         image: gcr.io/terra-kernel-k8s/workspace-test:0.0.0
         imagePullPolicy: Always
-        # These vars are read by the demo service
-        env:
-        - name: ROOT_CERT_PATH
-          value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        - name: CLIENT_CERT_PATH
-          value: /cockroach-certs/client.workspace-user.crt
-        - name: KEY_CERT_PATH
-          value: /cockroach-certs/client.workspace-user.key
         ports:
         - containerPort: 8080
+        env:
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: cloudsql-user-creds
+              key: username
+        - name: DATABASE_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cloudsql-user-creds
+              key: password
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.16
+        env:
+        - name: SQL_INSTANCE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: cloudsql-instance-name
+              key: name
+        command: ["/cloud_sql_proxy",
+                  "-instances=terra-kernel-k8s:us-central1:$(SQL_INSTANCE_NAME)=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/sql-creds.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
         volumeMounts:
-          - name: client-certs
-            mountPath: /cockroach-certs
-            readOnly: true
+        - name: cloudsql-sa-creds
+          mountPath: /secrets/cloudsql
+          readOnly: true
       volumes:
-        - name: client-certs
+        - name: cloudsql-sa-creds
           secret:
-            secretName: cockroach-certs
+            secretName: cloudsql-sa-creds
