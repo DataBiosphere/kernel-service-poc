@@ -9,7 +9,7 @@ plugins {
 	id 'idea'
 	id 'org.springframework.boot' version '2.2.2.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'com.google.cloud.tools.jib' version '1.6.1'
+	id 'com.google.cloud.tools.jib' version '1.8.0'
 	id "org.openapi.generator" version "4.2.3"
 }
 
@@ -40,6 +40,11 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+}
+
+// Exclude the Spring logger, so everything will use SLF4J
+configurations.all {
+	exclude group: "commons-logging", module: "commons-logging"
 }
 
 // OpenAPI Server Generation
