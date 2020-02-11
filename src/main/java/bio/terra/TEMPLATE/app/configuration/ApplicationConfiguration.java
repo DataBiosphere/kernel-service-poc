@@ -28,7 +28,7 @@ import java.util.Properties;
 @Configuration
 @EnableConfigurationProperties
 @EnableTransactionManagement
-@ConfigurationProperties(prefix = "TEMPLATE")
+@ConfigurationProperties(prefix = "template")
 public class ApplicationConfiguration {
 
     // Configurable properties
