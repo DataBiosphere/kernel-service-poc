@@ -3,7 +3,7 @@ name: GCR Push
 on:
   push:
     branches:
-    - zloery-dev
+    - openapi-doc
 env:
   SERVICE_NAME: workspace-test
   GOOGLE_PROJECT: terra-kernel-k8s
