@@ -5,7 +5,7 @@ on:
     branches:
     - master
 env:
-  SERVICE_NAME: workspace-test
+  SERVICE_NAME: ${{ github.event.repository.name }}
   GOOGLE_PROJECT: terra-kernel-k8s
   GKE_CLUSTER: terra-kernel-k8s
   VAULT_PATH_GCR: secret/dsde/terra/kernel/test
@@ -69,3 +69,10 @@ jobs:
       run: chmod +x gradlew
     - name: Build and push GCR image using Jib
       run: "./gradlew jib --image=gcr.io/${GOOGLE_PROJECT}/${SERVICE_NAME}:${{ steps.tag.outputs.tag }}"
+    - name: Update Framework Version Mapping
+      uses: broadinstitute/repository-dispatch@master
+      with:
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        repository: databiosphere/framework-version
+        event-type: version-bump
+        client-payload: '{"service": "${{ env.SERVICE_NAME }}", "version": "${{ steps.tag.outputs.tag }}"}'

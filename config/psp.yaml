@@ -1,11 +1,9 @@
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: template-service-psp
+  name: kernel-service-poc-service-psp
   annotations:
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
-  labels:
-    name: podsecuritypolicy
 spec:
   privileged: false
   seLinux:
