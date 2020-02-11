@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-deployment
+  name: kernel-service-poc-deployment
   labels:
     version: v1
 spec:
   replicas: 1
   template:
     metadata:
-      name: demo-service
+      name: kernel-service-poc-service
       labels:
         version: v1
     spec:
-      serviceAccountName: demo-service-sa
+      serviceAccountName: kernel-service-poc-service-sa
       containers:
-      - name: demo-app
-        image: gcr.io/terra-kernel-k8s/workspace-test:0.0.0
+      - name: kernel-service-poc
+        image: gcr.io/terra-kernel-k8s/kernel-service-poc:0.0.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

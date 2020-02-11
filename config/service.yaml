@@ -1,10 +1,10 @@
 apiVersion: "v1"
 kind: "Service"
 metadata:
-  name: "demo-deployment-service"
+  name: "kernel-service-poc-service"
 spec:
   ports:
   - name: "http"
     port: 8080
   selector:
-    app: "demo-service"
+    app: "kernel-service-poc"
