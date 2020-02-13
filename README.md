@@ -18,6 +18,10 @@ across all of our APIs:
 <li>SystemStatus - a common response to the /status endpoint</li>
 </ul>
 
+A swagger-ui page is available at /api/swagger-ui.html on any running instance. 
+TEMPLATE: Once a service has a stable dev/alpha instance, a link to its 
+swagger-ui page should go here.
+
 ## Spring Boot
 We use Spring Boot as our framework for REST servers. The objective is to use a minimal set
 of Spring features; there are many ways to do the same thing and we would like to constrain ourselves

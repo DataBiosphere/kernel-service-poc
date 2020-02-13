@@ -25,12 +25,12 @@ public class UnauthenticatedApiController implements UnauthenticatedApi {
         }
 
         SystemStatusSystems otherSystemStatus = new SystemStatusSystems()
-                .ok(status)
-                .addMessagesItem("other systems are SO " + reliable);
+            .ok(status)
+            .addMessagesItem("other systems are SO " + reliable);
 
         SystemStatus systemStatus = new SystemStatus()
-                .ok(status)
-                .putSystemsItem("otherSystem", otherSystemStatus);
+            .ok(status)
+            .putSystemsItem("otherSystem", otherSystemStatus);
 
         return new ResponseEntity<>(systemStatus, httpStatus);
     }
