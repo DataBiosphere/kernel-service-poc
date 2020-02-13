@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: template-deployment
+  name: demo-deployment
   labels:
     version: v1
 spec:
   replicas: 1
   template:
     metadata:
-      name: template-service
+      name: demo-service
       labels:
         version: v1
     spec:
-      serviceAccountName: template-service-sa
+      serviceAccountName: demo-service-sa
       containers:
-      - name: template-app
+      - name: demo-app
         image: gcr.io/terra-kernel-k8s/workspace-test:0.0.0
         imagePullPolicy: Always
         ports:
@@ -49,6 +49,6 @@ spec:
           mountPath: /secrets/cloudsql
           readOnly: true
       volumes:
-      - name: cloudsql-sa-creds
-        secret:
-          secretName: cloudsql-sa-creds
+        - name: cloudsql-sa-creds
+          secret:
+            secretName: cloudsql-sa-creds
