@@ -5,6 +5,8 @@ project for MC Terra services.
 In general, once you copy this project, you can search for the word "template" and
 fill in your service or some other appropriate name.
 
+[Deliverybot Dashboard](https://app.deliverybot.dev/DataBiosphere/framework-version/branch/master)
+
 ## OpenAPI V3 - formerly swagger
 The template provides a simple OpenAPI V3 yaml document that includes a /status
 endpoint and a /api/template/v1/ping endpoint. The ping endpoint is there to
