@@ -23,17 +23,17 @@ spec:
         - name: DATABASE_USER
           valueFrom:
             secretKeyRef:
-              name: kernel-service-poc/postgres-db-creds
+              name: kernel-service-poc-postgres-db-creds
               key: username
         - name: DATABASE_USER_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: kernel-service-poc/postgres-db-creds
+              name: kernel-service-poc-postgres-db-creds
               key: password
         - name: DATABASE_NAME
           valueFrom:
             secretKeyRef:
-              name: kernel-service-poc/postgres-db-name
+              name: kernel-service-poc-postgres-db-name
               key: name
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.16
