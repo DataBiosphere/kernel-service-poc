@@ -41,7 +41,7 @@ spec:
         - name: SQL_INSTANCE_NAME
           valueFrom:
             secretKeyRef:
-              name: postgres-cloudsql-instance-name
+              name: cloudsql-postgres-instance-name
               key: name
         command: ["/cloud_sql_proxy",
                   "-instances=terra-kernel-k8s:us-central1:$(SQL_INSTANCE_NAME)=tcp:5432",
