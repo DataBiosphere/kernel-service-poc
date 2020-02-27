@@ -21,5 +21,4 @@ sed -i '' "s|github.com/databiosphere/kernel-service-poc//config?ref=0.0.0|../..
 
 # That's it! You can now deploy to the k8s cluster by running
 # skaffold run
-# skaffold run --default-repo gcr.io/terra-kernel-k8s
 
