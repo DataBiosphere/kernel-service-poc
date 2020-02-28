@@ -10,7 +10,7 @@ set -e
 #Required input
 NAMESPACE=$1
 
-# For other services forking this TEMPLAET repo, change this line to the appropriate config repo. 
+# For other services forking this TEMPLATE repo, change this line to the appropriate config repo. 
 git clone https://github.com/DataBiosphere/kernel-service-poc-config
 
 # Point skaffold to the new kustomize base
@@ -20,5 +20,5 @@ sed "s|NAMESPACE|${NAMESPACE}|g" skaffold.yaml.template > skaffold.yaml
 sed -i '' "s|github.com/databiosphere/kernel-service-poc//config?ref=0.0.0|../../../config|g" kernel-service-poc-config/${NAMESPACE}/kustomization.yaml
 
 # That's it! You can now deploy to the k8s cluster by running
-# skaffold run
-
+# $ skaffold run
+# Or by using IntelliJ's Cloud Code integration, which will auto-detect the generated skaffold.yaml file.
