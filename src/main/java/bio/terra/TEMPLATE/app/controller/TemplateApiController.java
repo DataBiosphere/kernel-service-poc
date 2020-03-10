@@ -8,20 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
 @Controller
 public class TemplateApiController implements TemplateApi {
-    private PingService pingService;
+  private PingService pingService;
 
-    @Autowired
-    public TemplateApiController(PingService pingService) {
-        this.pingService = pingService;
-    }
+  @Autowired
+  public TemplateApiController(PingService pingService) {
+    this.pingService = pingService;
+  }
 
-    @Override
-    public ResponseEntity<String> ping(@RequestParam(value = "message", required = false) String message) {
-        String result = pingService.computePing(message);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+  @Override
+  public ResponseEntity<String> ping(
+      @RequestParam(value = "message", required = false) String message) {
+    String result = pingService.computePing(message);
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 }
