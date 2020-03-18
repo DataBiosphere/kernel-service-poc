@@ -8,10 +8,10 @@ import org.springframework.util.StringUtils;
 
 @Component
 public class PingService {
-    public String computePing(String message) {
-        if (StringUtils.isEmpty(message)) {
-            throw new BadPingException("No message to ping");
-        }
-        return "pong: " + message + "\n";
+  public String computePing(String message) {
+    if (StringUtils.isEmpty(message)) {
+      throw new BadPingException("No message to ping");
     }
+    return "pong: " + message + "\n";
+  }
 }

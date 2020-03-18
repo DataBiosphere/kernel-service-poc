@@ -13,4 +13,4 @@ You can now push to the specified environment by running
 ```
 skaffold run
 ```
-Or by using IntelliJ's Cloud Code integration, which will auto-detect the generated skaffold.yaml file.
+or by using IntelliJ's Cloud Code integration, which will auto-detect the generated skaffold.yaml file.
