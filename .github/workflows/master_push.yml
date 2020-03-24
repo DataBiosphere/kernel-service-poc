@@ -9,6 +9,8 @@ on:
     - '.github/**'
 env:
   SERVICE_NAME: ${{ github.event.repository.name }}
+  GOOGLE_PROJECT: terra-kernel-k8s
+  GKE_CLUSTER: terra-kernel-k8s
   VAULT_PATH_GCR: secret/dsde/terra/kernel/test
   VAULT_ADDR: https://clotho.broadinstitute.org:8200
 jobs:
