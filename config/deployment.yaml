@@ -33,8 +33,8 @@ spec:
         - name: DATABASE_NAME
           valueFrom:
             secretKeyRef:
-              name: kernel-service-poc-postgres-db-name
-              key: name
+              name: kernel-service-poc-postgres-db-creds
+              key: db
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.16
         env:
@@ -45,15 +45,15 @@ spec:
               key: name
         command: ["/cloud_sql_proxy",
                   "-instances=terra-kernel-k8s:us-central1:$(SQL_INSTANCE_NAME)=tcp:5432",
-                  "-credential_file=/secrets/cloudsql/service-account.json"]
+                  "-credential_file=/secrets/sa/service-account.json"]
         securityContext:
           runAsUser: 2  # non-root user
           allowPrivilegeEscalation: false
         volumeMounts:
-        - name: cloudsql-sa-creds
-          mountPath: /secrets/cloudsql
+        - name: sa-creds
+          mountPath: /secrets/sa
           readOnly: true
       volumes:
-        - name: cloudsql-sa-creds
+        - name: sa-creds
           secret:
-            secretName: cloudsql-sa-creds
+            secretName: kernel-service-poc-sa
