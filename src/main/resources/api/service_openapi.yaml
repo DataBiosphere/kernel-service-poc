@@ -8,6 +8,8 @@ info:
   version: 0.0.1
 
 servers:
+  # When developing locally/with Skaffold, add local entry with url prefix here:
+  # E.g. url: /env-kernel-service-poc
   - url: http://localhost:8080
 
 paths:
