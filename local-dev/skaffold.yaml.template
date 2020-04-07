@@ -9,4 +9,4 @@ build:
 deploy:
   kustomize:
     paths:
-    - kernel-service-poc-config/NAMESPACE
+    - terra-config/NAMESPACE/kernel-service-poc

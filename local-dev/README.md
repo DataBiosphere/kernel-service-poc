@@ -22,3 +22,12 @@ adding your url prefix to the `servers` list. Currently, url prefixes are
 
 For example, the `kernel-service-poc` 
 service instance in the `dev` environment would have prefix `/dev-kernel-service-poc`.
+
+NOTE: browsers sometimes cache the swagger-ui webpage. If local changes to the
+API aren't appearing on the swagger-ui page, try clearing your browser's cache.
+
+By default, Skaffold will clean up after itself, including deleting the created
+image and any kubernetes resources specified as part of deployment. To change
+this behavior, add the `--cleanup=false` flag to the Skaffold cli or by changing
+ the setting in IntelliJ's Cloud Code integration.
+ 
