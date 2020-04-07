@@ -1,6 +1,10 @@
-This directory contains scripts for running continuous development builds. This is not necessary for deployment, but it can be helpful for developing faster.
-The provided setup script clones the kernel-service-poc-config git repo, points it to the local version of this repo (rather than a published version), and points skaffold to the -config repo's kustomize.
-If you need to pull changes to the -config repo, just delete your local kernel-service-poc-config directory and rerun the script.
+This directory contains scripts for running continuous development builds. This 
+is not necessary for deployment, but it can be helpful for developing faster.
+The provided setup script clones the terra-config git repo, points it to the 
+local version of this repo (rather than a published version), and points 
+skaffold to the -config repo's kustomize.
+If you need to pull changes to the -config repo, just delete your local 
+terra-config directory and rerun the script.
 
 To use this, first ensure Skaffold is installed on your local machine (available at https://skaffold.dev/). You may need to use gcloud to provide GCR credentials with `gcloud auth configure-docker`. Finally, run local-run.sh with your target environment as the first argument:
 
@@ -22,3 +26,12 @@ adding your url prefix to the `servers` list. Currently, url prefixes are
 
 For example, the `kernel-service-poc` 
 service instance in the `dev` environment would have prefix `/dev-kernel-service-poc`.
+
+NOTE: browsers sometimes cache the swagger-ui webpage. If local changes to the
+API aren't appearing on the swagger-ui page, try clearing your browser's cache.
+
+By default, Skaffold will clean up after itself, including deleting the created
+image and any kubernetes resources specified as part of deployment. To change
+this behavior, add the `--cleanup=false` flag to the Skaffold cli or by changing
+ the setting in IntelliJ's Cloud Code integration.
+ 
