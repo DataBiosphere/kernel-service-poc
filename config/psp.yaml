@@ -5,7 +5,7 @@ metadata:
   annotations:
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
 spec:
-  privileged: true
+  privileged: false
   allowedCapabilities:
     - 'NET_ADMIN'
   seLinux:
