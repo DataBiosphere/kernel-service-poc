@@ -4,7 +4,6 @@ commonLabels:
   app: kernel-service-poc
 resources:
 - service-account.yaml
-- psp.yaml
 - role.yaml
 - rolebinding.yaml
 - istio-service.yaml
