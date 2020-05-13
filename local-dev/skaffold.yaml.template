@@ -7,6 +7,16 @@ build:
     context: ../
     jib: {}
 deploy:
-  kustomize:
-    paths:
-    - terra-config/NAMESPACE/kernel-service-poc
+  helm:
+    releases:
+    - name: poc-ENV
+      namespace: terra-ENV
+      chartPath: terra-helm/charts/poc
+      skipBuildDependencies: true
+      values:
+        image: gcr.io/terra-kernel-k8s/kernel-service-poc
+      valuesFiles:
+        - values.yaml
+        - terra-helmfile/terra/values/poc.yaml
+        - terra-helmfile/terra/values/poc/personal.yaml
+        - terra-helmfile/terra/values/poc/personal/ENV.yaml
