@@ -171,9 +171,7 @@ First install [skaffold](https://github.com/GoogleContainerTools/skaffold):
 
 Next, [enable the CloudCode plugin for IntelliJ](https://cloud.google.com/code/docs/intellij/quickstart-IDEA).
 
-Finally, run `local-dev/setup_local_env.sh <your dev environment name>`. This 
-is a small script that clones the latest environment configuration kustomizations
-from [github.com/databiosphere/kernel-poc-service-config](github.com/databiosphere/kernel-poc-service-config)
-and sets up your local skaffold.yaml file.
+Finally, run `local-dev/setup_local_env.sh <your dev environment name>`. This is a small script that clones the Terra
+[helm charts](https://github.com/broadinstitute/terra-helm) and [values definitions](https://github.com/broadinstitute/terra-helmfile), then sets up your local skaffold.yaml file.
 
 Then you should be able to either `Deploy to Kubernetes` or `Develop on Kubernetes` from the run configurations menu.
