@@ -165,9 +165,9 @@ There are sample tests for the ping service to illustrate two styles of unit tes
 Once you have deployed to GKE, if you are developing on the API it might be useful to update the API container image
 without having to go through a full re-deploy of the Kubernetes namespace. CloudCode for IntelliJ makes this simple.
 Code for local development lives in the `local-dev` directory.
-First install [skaffold](https://github.com/GoogleContainerTools/skaffold):
+First install [skaffold](https://github.com/GoogleContainerTools/skaffold) and [helm](https://helm.sh/)
 
-    brew install skaffold
+    brew install skaffold helm
 
 Next, [enable the CloudCode plugin for IntelliJ](https://cloud.google.com/code/docs/intellij/quickstart-IDEA).
 
