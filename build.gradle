@@ -81,9 +81,14 @@ openApiValidate {
 	inputSpec = "${openapiSourceFile}".toString()
 }
 
+task minniekenny(type: Exec) {
+	commandLine 'sh', './minnie-kenny.sh'
+}
+
 compileJava.dependsOn tasks.openApiGenerate
 sourceSets.main.java.srcDir "${openapiTargetDir}/src/main/java"
 ideaModule.dependsOn tasks.openApiGenerate
+test.dependsOn tasks.minniekenny
 
 // end of OpenAPI Server Generation
 
