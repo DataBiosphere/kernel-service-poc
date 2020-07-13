@@ -16,7 +16,7 @@ deploy:
       values:
         image: gcr.io/terra-kernel-k8s/kernel-service-poc
       valuesFiles:
-        - values.yaml
         - terra-helmfile/terra/values/poc.yaml
         - terra-helmfile/terra/values/poc/personal.yaml
         - terra-helmfile/terra/values/poc/personal/ENV.yaml
+        - values.yaml
