@@ -1,0 +1,15 @@
+name: Delete Preview Environment
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  preview-delete:
+    name: Delete Preview Environment
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete
+      uses: broadinstitute/terra-preview/delete@master
+      with:
+        app-prs: '{"poc":"${{ github.event.issue.url }}"}'

@@ -1,0 +1,39 @@
+name: Create Preview Environment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  preview-create:
+    name: Create Preview Environment
+    runs-on: ubuntu-latest
+    if: github.event.comment.body == 'preview create'
+    steps:
+    - name: Create
+      id: create
+      uses: broadinstitute/terra-preview/create@master
+      with:
+        app-prs: '{"poc":"${{ github.event.issue.url }}"}'
+
+  preview-test:
+    name: Run Tests in Preview Environment
+    runs-on: ubuntu-latest
+    if: github.event.comment.body == 'preview test'
+    steps:
+    - name: Create
+      id: create
+      uses: broadinstitute/terra-preview/create@master
+      with:
+        app-prs: '{"poc":"${{ github.event.issue.url }}"}'
+    - name: Test
+      id: test
+      uses: ./.github/actions/test
+      with:
+        endpoints: ${{ steps.create.outputs.endpoints }}
+    - name: Report
+      id: report
+      uses: broadinstitute/terra-preview/report@master
+      with:
+        status: ${{ steps.test.outputs.status }}
+        logs: ${{ steps.test.outputs.logs }}
