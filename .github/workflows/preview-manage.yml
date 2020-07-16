@@ -1,4 +1,4 @@
-name: Create Preview Environment
+name: Manage Preview Environment
 
 on:
   issue_comment:
@@ -13,8 +13,6 @@ jobs:
     - name: Create
       id: create
       uses: broadinstitute/terra-preview/create@master
-      with:
-        app-prs: '{"poc":"${{ github.event.issue.url }}"}'
 
   preview-test:
     name: Run Tests in Preview Environment
@@ -24,16 +22,27 @@ jobs:
     - name: Create
       id: create
       uses: broadinstitute/terra-preview/create@master
-      with:
-        app-prs: '{"poc":"${{ github.event.issue.url }}"}'
     - name: Test
       id: test
       uses: ./.github/actions/test
       with:
         endpoints: ${{ steps.create.outputs.endpoints }}
+        versions: ${{ steps.create.outputs.versions }}
     - name: Report
       id: report
       uses: broadinstitute/terra-preview/report@master
       with:
         status: ${{ steps.test.outputs.status }}
-        logs: ${{ steps.test.outputs.logs }}
+        testData: ${{ steps.test.outputs.testData }}
+        pullRequests: ${{ steps.test.outputs.pullRequests }}
+    - name: Delete
+      uses: broadinstitute/terra-preview/delete@master
+      if: ${{ steps.test.outputs.status }} == 'true'
+
+  preview-delete:
+    name: Delete Preview Environment
+    runs-on: ubuntu-latest
+    if: github.event.comment.body == 'preview delete'
+    steps:
+    - name: Delete
+      uses: broadinstitute/terra-preview/delete@master

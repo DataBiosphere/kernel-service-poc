@@ -11,5 +11,3 @@ jobs:
     steps:
     - name: Delete
       uses: broadinstitute/terra-preview/delete@master
-      with:
-        app-prs: '{"poc":"${{ github.event.issue.url }}"}'
