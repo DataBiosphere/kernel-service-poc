@@ -12,7 +12,6 @@ deploy:
     - name: poc-ENV
       namespace: terra-ENV
       chartPath: terra-helm/charts/poc
-      skipBuildDependencies: true
       values:
         image: gcr.io/terra-kernel-k8s/kernel-service-poc
       valuesFiles:
