@@ -31,6 +31,10 @@ jobs:
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v2
+      - name: Set up AdoptOpenJDK 11
+        uses: joschi/setup-jdk@v2
+        with:
+          java-version: 11
       - name: "Import Vault secrets"
         uses: hashicorp/vault-action@v2.0.1
         with:
