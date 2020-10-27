@@ -12,17 +12,27 @@ plugins {
 	id 'com.google.cloud.tools.jib' version '1.8.0'
 	id 'org.openapi.generator' version '4.2.3'
 	id 'com.diffplug.gradle.spotless' version '3.27.2'
+	id 'bio.terra.test-runner-plugin' version '0.0.1-SNAPSHOT'
 }
 
 group = 'bio.terra.TEMPLATE'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
 	mavenCentral()
+	maven {
+		url "https://broadinstitute.jfrog.io/broadinstitute/libs-snapshot-local/"
+	}
+	maven {
+		url "https://broadinstitute.jfrog.io/broadinstitute/libs-release/"
+	}
 }
 
 dependencies {
+	// Test Runner Library
+	implementation group: "bio.terra", name: "terra-test-runner", version: "0.0.1-SNAPSHOT"
+
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jdbc'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
@@ -86,6 +96,11 @@ sourceSets.main.java.srcDir "${openapiTargetDir}/src/main/java"
 ideaModule.dependsOn tasks.openApiGenerate
 
 // end of OpenAPI Server Generation
+
+// Test Runner Echo plugin parameter
+echoPluginExt {
+	msg = "I'm your test runner!"
+}
 
 test {
 	useJUnitPlatform()

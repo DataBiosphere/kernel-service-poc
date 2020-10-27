@@ -74,4 +74,4 @@ jobs:
           # psql -U postgres -f ./db/create-data-repo-db
           # run integration tests
           ./gradlew assemble
-          ./gradlew test --scan
+          ./gradlew echo
