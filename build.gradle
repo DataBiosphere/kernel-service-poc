@@ -99,7 +99,7 @@ ideaModule.dependsOn tasks.openApiGenerate
 
 // Test Runner Echo plugin parameter
 echoPluginExt {
-	msg = "I'm your test runner!!"
+	msg = "I'm your test runner!!!"
 }
 
 test {

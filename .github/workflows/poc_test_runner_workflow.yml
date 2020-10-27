@@ -15,7 +15,7 @@ on:
       - '*.md'
       - '.github/**'
 jobs:
-  alpha-integration-test:
+  test-runner-template-test:
     runs-on: ubuntu-latest
     # run a local Postgres container in Docker for the basic check tests
     services:
@@ -35,6 +35,16 @@ jobs:
         uses: joschi/setup-jdk@v2
         with:
           java-version: 11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: v1-${{ runner.os }}-gradle-${{ hashfiles('**/gradle-wrapper.properties') }}-${{ hashFiles('**/*.gradle') }}
+          restore-keys: v1-${{ runner.os }}-gradle-${{ hashfiles('**/gradle-wrapper.properties') }}
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
       - name: "Import Vault secrets"
         uses: hashicorp/vault-action@v2.0.1
         with:
@@ -76,6 +86,6 @@ jobs:
           # check that postgres is ready
           pg_isready -h ${PGHOST} -p 5432
           # psql -U postgres -f ./db/create-data-repo-db
-          # run integration tests
-          ./gradlew assemble
+          # run test runner plugin task - echo
+          ./gradlew spotlessCheck
           ./gradlew echo
