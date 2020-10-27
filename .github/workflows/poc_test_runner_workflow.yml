@@ -78,7 +78,7 @@ jobs:
           secretId: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
           secrets: |
             secret/dsde/datarepo/dev/sa-key-b64 sa | B64_APPLICATION_CREDENTIALS ;
-      - name: "Build and run alpha integration tests"
+      - name: "Build and run test runner plugin tests"
         run: |
           # write vault tokens
           base64 --decode <<< ${B64_APPLICATION_CREDENTIALS} > ${GOOGLE_APPLICATION_CREDENTIALS}
