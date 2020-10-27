@@ -87,5 +87,6 @@ jobs:
           pg_isready -h ${PGHOST} -p 5432
           # psql -U postgres -f ./db/create-data-repo-db
           # run test runner plugin task - echo
+          ./gradlew spotlessApply
           ./gradlew spotlessCheck
           ./gradlew echo
