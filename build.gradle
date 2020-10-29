@@ -12,6 +12,7 @@ plugins {
 	id 'com.google.cloud.tools.jib' version '1.8.0'
 	id 'org.openapi.generator' version '4.2.3'
 	id 'com.diffplug.gradle.spotless' version '3.27.2'
+	id 'bio.terra.test-runner-echo-plugin' version '0.0.1-SNAPSHOT'
 	id 'bio.terra.test-runner-plugin' version '0.0.1-SNAPSHOT'
 }
 
@@ -97,13 +98,20 @@ ideaModule.dependsOn tasks.openApiGenerate
 
 // end of OpenAPI Server Generation
 
-// Test Runner Echo plugin parameter
+// Test Runner Echo Plugin Extension
 echoPluginExt {
 	msg = "I'm your test runner!!!"
 }
 
 test {
 	useJUnitPlatform()
+}
+
+testrunner {
+	targetEnv = "perf"
+	targetSvc = "TDR"
+	projectId = "dsde-perf"
+	namespace = "ichang"
 }
 
 spotless {

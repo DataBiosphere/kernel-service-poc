@@ -89,4 +89,4 @@ jobs:
           # run test runner plugin task - echo
           ./gradlew spotlessApply
           ./gradlew spotlessCheck
-          ./gradlew echo
+          ./gradlew testrunner --targetSvc="TDR" --projectId="dsde-perf"
