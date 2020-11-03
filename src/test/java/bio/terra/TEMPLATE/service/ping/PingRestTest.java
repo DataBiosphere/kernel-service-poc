@@ -47,7 +47,6 @@ public class PingRestTest {
     MockHttpServletResponse response = result.getResponse();
     String output = response.getContentAsString();
     assertThat("Result starts with pong", output, startsWith("pong:"));
-    assertThat("Result starts with pong", output, startsWith("pong:"));
   }
 
   @Test
