@@ -12,6 +12,7 @@ plugins {
 	id 'com.google.cloud.tools.jib' version '1.8.0'
 	id 'org.openapi.generator' version '4.2.3'
 	id 'com.diffplug.gradle.spotless' version '3.27.2'
+	id 'com.github.spotbugs' version '4.6.0'
 	id 'bio.terra.test-runner-echo-plugin' version '0.0.1-SNAPSHOT'
 	id 'bio.terra.test-runner-plugin' version '0.0.1-SNAPSHOT'
 }
